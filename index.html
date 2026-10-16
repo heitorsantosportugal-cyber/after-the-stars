@@ -1,11 +1,12 @@
-
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AFTER THE STARS — My Universe</title>
+
+
+
 
 <style>
 :root {
@@ -372,6 +373,199 @@ select option { background: #110c13; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }
 }
+
+
+/* ===== AFTER THE STARS: CINEMATIC UPGRADE ===== */
+
+body {
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(100, 0, 25, 0.18),
+      transparent 60%
+    ),
+    var(--bg);
+}
+
+.background-glow {
+  background:
+    radial-gradient(
+      ellipse at 50% 48%,
+      rgba(80, 0, 20, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 15% 85%,
+      rgba(120, 0, 20, 0.10),
+      transparent 45%
+    );
+}
+
+/* Movimento suave para o fundo existente */
+#sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Conteúdo acima das estrelas */
+header,
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Respeitar quem prefere menos animações */
+@media (prefers-reduced-motion: reduce) {
+  #sky {
+    opacity: 0.7;
+  }
+}
+
+
+/* ===== AMBIENT MUSIC CONTROLS ===== */
+
+.music-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+#musicVolume {
+  width: 100px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+
+#musicButton {
+  border-color: var(--red-dark);
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+#musicButton:hover {
+  background: #28101a;
+  box-shadow: 0 0 18px rgba(240, 82, 109, 0.18);
+}
+
+
+
+/* ===== THE SECRET DIARY ===== */
+.diary-section {
+  width: min(760px, 92%);
+  margin: 70px auto 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.diary-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.diary-heading h2 {
+  font-size: clamp(28px, 5vw, 42px);
+  letter-spacing: 4px;
+  margin: 14px 0;
+  color: #f0526d;
+  text-shadow: 0 0 24px rgba(240, 82, 109, .25);
+}
+
+.diary-heading p {
+  color: #aaa0b2;
+  line-height: 1.7;
+}
+
+.diary-card {
+  padding: 28px;
+  border: 1px solid rgba(240, 82, 109, .25);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #150b12, #09070b);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, .3);
+}
+
+.diary-card label {
+  display: block;
+  margin: 16px 0 9px;
+  color: #f0526d;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.diary-card input,
+.diary-card textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  color: #f6eff6;
+  background: #09070b;
+  border: 1px solid #38202d;
+  border-radius: 10px;
+  font: inherit;
+  outline: none;
+}
+
+.diary-card textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.diary-card input:focus,
+.diary-card textarea:focus {
+  border-color: #f0526d;
+  box-shadow: 0 0 0 3px rgba(240, 82, 109, .1);
+}
+
+.diary-card .primary {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+}
+
+.diary-status {
+  color: #f0526d;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.diary-entries {
+  display: grid;
+  gap: 14px;
+  margin-top: 25px;
+}
+
+.diary-warning {
+  text-align: center;
+  color: #807482;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .diary-section {
+    margin-top: 45px;
+  }
+
+  .diary-card {
+    padding: 19px;
+  }
+}
+
 </style>
 </head>
 
@@ -413,7 +607,46 @@ select option { background: #110c13; }
     As tuas memórias ficam guardadas neste navegador.
   </div>
 
+  
   <div class="status" id="status" aria-live="polite"></div>
+
+  <section class="diary-section" id="secretDiary">
+    <div class="diary-heading">
+      <div class="eyebrow">A PRIVATE CORNER OF THE UNIVERSE</div>
+      <h2>THE SECRET DIARY</h2>
+      <p>Algumas palavras merecem ficar guardadas nas estrelas.</p>
+    </div>
+
+    <div class="diary-card">
+      <label for="diaryTitle">TÍTULO DA MEMÓRIA</label>
+      <input
+        id="diaryTitle"
+        type="text"
+        maxlength="80"
+        placeholder="Um momento para recordar..."
+      >
+
+      <label for="diaryText">O QUE QUERES GUARDAR?</label>
+      <textarea
+        id="diaryText"
+        rows="5"
+        maxlength="5000"
+        placeholder="Escreve aqui os teus pensamentos..."
+      ></textarea>
+
+      <button class="primary" id="saveDiaryButton">
+        ✧ GUARDAR NO DIÁRIO
+      </button>
+
+      <div class="diary-status" id="diaryStatus" aria-live="polite"></div>
+    </div>
+
+    <div class="diary-entries" id="diaryEntries"></div>
+
+    <p class="diary-warning">
+      As entradas ficam guardadas neste navegador. Este diário não tem palavra-passe.
+    </p>
+  </section>
 </main>
 
 <footer>
@@ -467,7 +700,27 @@ select option { background: #110c13; }
       <button class="secondary" id="closeRead">FECHAR</button>
       <button class="danger" id="deleteButton">APAGAR</button>
     </div>
-  </section>
+  
+
+<div class="music-controls">
+  <button class="secondary" id="musicButton" type="button">
+    ♫ LIGAR MÚSICA
+  </button>
+
+  <label class="volume-control" for="musicVolume">
+    VOLUME
+    <input
+      id="musicVolume"
+      type="range"
+      min="0"
+      max="100"
+      value="25"
+    >
+  </label>
+</div>
+
+
+</section>
 </div>
 
 <script>
@@ -760,6 +1013,138 @@ resizeSky();
 render();
 requestAnimationFrame(animateSky);
 window.addEventListener("resize", resizeSky);
+
+const ambientMusic = document.getElementById("ambientMusic");
+const musicButton = document.getElementById("musicButton");
+const musicVolume = document.getElementById("musicVolume");
+
+ambientMusic.volume = Number(musicVolume.value) / 100;
+
+musicButton.addEventListener("click", async () => {
+  if (ambientMusic.paused) {
+    try {
+      await ambientMusic.play();
+      musicButton.textContent = "♫ DESLIGAR MÚSICA";
+    } catch (error) {
+      musicButton.textContent = "⚠ TENTAR NOVAMENTE";
+      console.error("Não foi possível reproduzir o áudio:", error);
+    }
+  } else {
+    ambientMusic.pause();
+    musicButton.textContent = "♫ LIGAR MÚSICA";
+  }
+});
+
+musicVolume.addEventListener("input", () => {
+  ambientMusic.volume = Number(musicVolume.value) / 100;
+});
+
+
+/* ===== AFTER THE STARS: SECRET DIARY ===== */
+const diaryTitleInput = document.getElementById("diaryTitle");
+const diaryTextInput = document.getElementById("diaryText");
+const saveDiaryButton = document.getElementById("saveDiaryButton");
+const diaryEntriesContainer = document.getElementById("diaryEntries");
+const diaryStatus = document.getElementById("diaryStatus");
+
+const diaryStorageKey = "after-the-stars-diary-v1";
+let diaryEntries = [];
+
+try {
+  diaryEntries = JSON.parse(
+    localStorage.getItem(diaryStorageKey) || "[]"
+  );
+
+  if (!Array.isArray(diaryEntries)) diaryEntries = [];
+} catch {
+  diaryEntries = [];
+}
+
+function renderDiaryEntries() {
+  diaryEntriesContainer.replaceChildren();
+
+  diaryEntries.forEach(entry => {
+    const card = document.createElement("article");
+    card.style.cssText = `
+      padding: 20px;
+      border: 1px solid rgba(240,82,109,.25);
+      border-radius: 14px;
+      background: #110c13;
+      overflow-wrap: anywhere;
+    `;
+
+    const title = document.createElement("h3");
+    title.textContent = entry.title;
+    title.style.color = "#f0526d";
+
+    const date = document.createElement("p");
+    date.textContent = entry.date;
+    date.style.cssText = "color:#aaa0b2;font-size:12px";
+
+    const content = document.createElement("p");
+    content.textContent = entry.text;
+    content.style.cssText = "white-space:pre-wrap;line-height:1.7";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "secondary";
+    deleteButton.textContent = "✕ APAGAR ENTRADA";
+
+    deleteButton.addEventListener("click", () => {
+      if (!confirm("Queres mesmo apagar esta entrada?")) return;
+
+      diaryEntries = diaryEntries.filter(item => item.id !== entry.id);
+
+      try {
+        localStorage.setItem(diaryStorageKey, JSON.stringify(diaryEntries));
+        renderDiaryEntries();
+        diaryStatus.textContent = "Entrada apagada.";
+      } catch {
+        diaryStatus.textContent = "Não foi possível atualizar o diário.";
+      }
+    });
+
+    card.append(title, date, content, deleteButton);
+    diaryEntriesContainer.appendChild(card);
+  });
+}
+
+saveDiaryButton.addEventListener("click", () => {
+  const title = diaryTitleInput.value.trim();
+  const content = diaryTextInput.value.trim();
+
+  if (!title || !content) {
+    diaryStatus.textContent = "Escreve um título e a tua memória primeiro.";
+    return;
+  }
+
+  const entry = {
+    id: Date.now().toString() + Math.random().toString(16).slice(2),
+    title,
+    text: content,
+    date: new Date().toLocaleString("pt-PT")
+  };
+
+  diaryEntries.unshift(entry);
+
+  try {
+    localStorage.setItem(diaryStorageKey, JSON.stringify(diaryEntries));
+    diaryTitleInput.value = "";
+    diaryTextInput.value = "";
+    diaryStatus.textContent = "✧ Memória guardada com sucesso!";
+    renderDiaryEntries();
+  } catch {
+    diaryEntries.shift();
+    diaryStatus.textContent = "Não foi possível guardar. Verifica o espaço disponível.";
+  }
+});
+
+renderDiaryEntries();
+
 </script>
+
+<audio id="ambientMusic" loop preload="none">
+  <source src="./sounds/ambient-piano.mp3" type="audio/mpeg">
+</audio>
+
 </body>
 </html>
