@@ -726,6 +726,14 @@ main {
 
 <script>
 const STORAGE_KEY = "after-the-stars-memories-v1";
+// Ligação ao Supabase
+const SUPABASE_URL = "https://noibelcjjlbbppqoauyn.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_YqvK6xOjSTvM9eDJmmt34g_WDulGwH0";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 const constellation = document.getElementById("constellation");
 const lines = document.getElementById("lines");
