@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFTER THE STARS — My Universe</title>
+
+<style>
+:root {
+  --bg: #08070b;
+  --panel: #110c13;
+  --red: #f0526d;
+  --red-dark: #84243b;
+  --white: #f6eff6;
+  --muted: #aaa0b2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+button, input, textarea, select { font: inherit; }
+
+button { cursor: pointer; }
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+#sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.background-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    #5c10251e,
+    transparent 65%
+  );
+  z-index: 0;
+}
+
+header, main, footer {
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  padding: 25px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #ffffff0c;
+}
+
+.brand {
+  color: var(--white);
+  font-size: 13px;
+  letter-spacing: 3px;
+}
+
+.brand span { color: var(--red); }
+
+.header-label {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+main {
+  width: min(1000px, 92%);
+  margin: 0 auto;
+  padding: 55px 0 45px;
+}
+
+.intro { text-align: center; }
+
+.eyebrow {
+  color: var(--red);
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 18px 0 12px;
+  font-weight: 300;
+  letter-spacing: 5px;
+  font-size: clamp(34px, 6vw, 60px);
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.primary, .secondary {
+  border-radius: 30px;
+  padding: 12px 19px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  transition: .25s;
+}
+
+.primary {
+  color: white;
+  background: #8e2039;
+  border: 1px solid #d44863;
+}
+
+.primary:hover {
+  background: #b52c4a;
+  box-shadow: 0 0 25px #f0526d24;
+}
+
+.secondary {
+  color: #e3cbd4;
+  background: #ffffff05;
+  border: 1px solid #ffffff22;
+}
+
+.secondary:hover { border-color: var(--red); }
+
+.constellation {
+  position: relative;
+  width: 100%;
+  height: 390px;
+  margin: 38px auto 0;
+  border: 1px solid #ffffff12;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, #5010231c, transparent 70%),
+    #0b090fbb;
+  box-shadow: inset 0 0 60px #00000050;
+}
+
+.constellation::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, #ffffff04, transparent 45%);
+}
+
+#lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #ff9dad;
+}
+
+.star::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: #ff9dad;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 3px #f0526d88, 0 0 22px 5px #f0526d35;
+  transition: .25s;
+}
+
+.star:hover::before, .star:focus-visible::before {
+  transform: scale(1.8);
+  background: white;
+  box-shadow: 0 0 12px 5px #f0526d;
+}
+
+.star span {
+  position: absolute;
+  top: 29px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 130px;
+  color: #d7c9d8;
+  font-size: 10px;
+  text-shadow: 0 2px 8px black;
+  pointer-events: none;
+}
+
+.empty-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+  padding: 25px;
+  pointer-events: none;
+}
+
+.empty-hint strong {
+  color: #f08091;
+  font-weight: 400;
+}
+
+.note {
+  text-align: center;
+  margin-top: 17px;
+  color: #807587;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+footer {
+  text-align: center;
+  padding: 22px 15px 30px;
+  color: #716777;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  padding: 20px;
+  overflow-y: auto;
+  background: #000000c9;
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay.open { display: flex; }
+
+.dialog {
+  width: min(500px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #100b13;
+  border: 1px solid #8c2a43;
+  border-radius: 18px;
+  padding: 27px;
+  box-shadow: 0 0 70px #7e183026;
+}
+
+.dialog h2 {
+  margin: 0 0 9px;
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.dialog-intro {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+label {
+  display: block;
+  color: #e8dce8;
+  font-size: 12px;
+  margin: 17px 0 8px;
+}
+
+input, textarea, select {
+  width: 100%;
+  border: 1px solid #ffffff22;
+  border-radius: 9px;
+  padding: 12px;
+  color: var(--white);
+  background: #09070c;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+select option { background: #110c13; }
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.dialog-actions button { flex: 1; }
+
+.danger {
+  border: 1px solid #76283a;
+  color: #ff9baa;
+  background: transparent;
+  border-radius: 30px;
+  padding: 11px 15px;
+}
+
+.read-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.9;
+  color: #e0d6e3;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.read-date {
+  color: var(--red);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-top: 14px;
+}
+
+.status {
+  color: #a8cdb0;
+  font-size: 11px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  header { padding: 20px 5%; }
+  .header-label { font-size: 8px; }
+  main { padding-top: 40px; }
+  .constellation { height: 350px; }
+  .dialog { padding: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+
+<body>
+<canvas id="sky"></canvas>
+<div class="background-glow"></div>
+
+<header>
+  <div class="brand">AFTER <span>THE STARS</span></div>
+  <div class="header-label">MY PRIVATE UNIVERSE ✦</div>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="eyebrow">A story still being written</div>
+    <h1>THE CONSTELLATION</h1>
+    <div class="subtitle">
+      Every star holds a story.<br>
+      Cada estrela guarda uma história.
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="addButton">＋ CRIAR UMA ESTRELA</button>
+      <button class="secondary" id="connectButton">✧ LIGAR AS ESTRELAS</button>
+    </div>
+  </section>
+
+  <section class="constellation" id="constellation"
+           aria-label="Constelação interativa">
+    <svg id="lines" aria-hidden="true"></svg>
+    <div class="empty-hint" id="emptyHint">
+      <strong>Your universe is waiting.</strong>
+      <span>Cria a primeira estrela para começar.</span>
+    </div>
+  </section>
+
+  <div class="note">
+    Clica numa estrela para ler ou editar a mensagem.<br>
+    As tuas memórias ficam guardadas neste navegador.
+  </div>
+
+  <div class="status" id="status" aria-live="polite"></div>
+</main>
+
+<footer>
+  AFTER THE STARS · CHAPTER 01 · MADE OF MEMORIES
+</footer>
+
+<!-- Janela para criar e editar -->
+<div class="overlay" id="editorOverlay" role="dialog"
+     aria-modal="true" aria-labelledby="editorTitle">
+  <form class="dialog" id="memoryForm">
+    <h2 id="editorTitle">Create a new star ✦</h2>
+    <div class="dialog-intro">
+      Uma memória, um sentimento ou algo que ainda não disseste.
+      Escreve aquilo que TU queres guardar.
+    </div>
+
+    <label for="memoryTitle">Nome da estrela</label>
+    <input id="memoryTitle" maxlength="55"
+           placeholder="Ex.: Um momento especial" required>
+
+    <label for="memoryType">Tipo de estrela</label>
+    <select id="memoryType">
+      <option value="memory">Memória</option>
+      <option value="feeling">Sentimento</option>
+      <option value="unsaid">Algo que ainda não disse</option>
+    </select>
+
+    <label for="memoryText">A tua mensagem</label>
+    <textarea id="memoryText" maxlength="4000"
+              placeholder="Escreve aqui as tuas palavras..."
+              required></textarea>
+
+    <div class="dialog-actions">
+      <button class="primary" type="submit">GUARDAR ESTRELA</button>
+      <button class="secondary" type="button" id="cancelEdit">CANCELAR</button>
+    </div>
+  </form>
+</div>
+
+<!-- Janela para ler uma memória -->
+<div class="overlay" id="readOverlay" role="dialog"
+     aria-modal="true" aria-labelledby="readTitle">
+  <section class="dialog">
+    <div class="eyebrow" id="readType">A MEMORY</div>
+    <h2 id="readTitle"></h2>
+    <div class="read-date" id="readDate"></div>
+    <div class="read-content" id="readContent"></div>
+
+    <div class="dialog-actions">
+      <button class="primary" id="editButton">EDITAR</button>
+      <button class="secondary" id="closeRead">FECHAR</button>
+      <button class="danger" id="deleteButton">APAGAR</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const STORAGE_KEY = "after-the-stars-memories-v1";
+
+const constellation = document.getElementById("constellation");
+const lines = document.getElementById("lines");
+const emptyHint = document.getElementById("emptyHint");
+const status = document.getElementById("status");
+
+const editorOverlay = document.getElementById("editorOverlay");
+const readOverlay = document.getElementById("readOverlay");
+const memoryForm = document.getElementById("memoryForm");
+
+let memories = [];
+let editingId = null;
+let selectedId = null;
+let connectStars = false;
+
+const types = {
+  memory: "A MEMORY · UMA MEMÓRIA",
+  feeling: "A FEELING · UM SENTIMENTO",
+  unsaid: "UNSAID WORDS · PALAVRAS POR DIZER"
+};
+
+function loadMemories() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) memories = parsed;
+    }
+  } catch (error) {
+    status.textContent =
+      "Não foi possível ler as memórias guardadas neste navegador.";
+  }
+}
+
+function saveMemories() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(memories));
+    status.textContent = "✦ Estrelas guardadas neste navegador.";
+    return true;
+  } catch (error) {
+    status.textContent =
+      "Não foi possível guardar. Verifica as definições de armazenamento do navegador.";
+    return false;
+  }
+}
+
+function safeText(value) {
+  return String(value ?? "");
+}
+
+function render() {
+  constellation.querySelectorAll(".star").forEach(el => el.remove());
+  lines.replaceChildren();
+  emptyHint.style.display = memories.length ? "none" : "grid";
+
+  const width = constellation.clientWidth;
+  const height = constellation.clientHeight;
+
+  lines.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  // Desenha linhas suaves entre as estrelas, se ativado.
+  if (connectStars && memories.length > 1) {
+    for (let i = 0; i < memories.length - 1; i++) {
+      const a = memories[i];
+      const b = memories[i + 1];
+
+      const line = document.createElementNS(
+        "http://www.w3.org/2000/svg", "line"
+      );
+
+      line.setAttribute("x1", a.x / 100 * width);
+      line.setAttribute("y1", a.y / 100 * height);
+      line.setAttribute("x2", b.x / 100 * width);
+      line.setAttribute("y2", b.y / 100 * height);
+      line.setAttribute("stroke", "#a8324b");
+      line.setAttribute("stroke-opacity", ".55");
+      line.setAttribute("stroke-width", "1");
+      lines.appendChild(line);
+    }
+  }
+
+  memories.forEach((memory, index) => {
+    const star = document.createElement("button");
+    star.type = "button";
+    star.className = "star";
+    star.style.left = memory.x + "%";
+    star.style.top = memory.y + "%";
+    star.setAttribute("aria-label", "Abrir estrela: " + memory.title);
+
+    const dotLabel = document.createElement("span");
+    dotLabel.textContent = memory.title;
+    star.appendChild(dotLabel);
+
+    star.addEventListener("click", () => openMemory(memory.id));
+    constellation.appendChild(star);
+  });
+}
+
+function openEditor(memory = null) {
+  editingId = memory ? memory.id : null;
+  memoryForm.reset();
+
+  document.getElementById("editorTitle").textContent =
+    memory ? "Edit your star ✦" : "Create a new star ✦";
+
+  document.getElementById("memoryTitle").value =
+    memory ? memory.title : "";
+
+  document.getElementById("memoryType").value =
+    memory ? memory.type : "memory";
+
+  document.getElementById("memoryText").value =
+    memory ? memory.text : "";
+
+  readOverlay.classList.remove("open");
+  editorOverlay.classList.add("open");
+  document.getElementById("memoryTitle").focus();
+}
+
+function closeEditor() {
+  editorOverlay.classList.remove("open");
+  editingId = null;
+}
+
+function openMemory(id) {
+  const memory = memories.find(item => item.id === id);
+  if (!memory) return;
+
+  selectedId = id;
+
+  document.getElementById("readType").textContent =
+    types[memory.type] || types.memory;
+
+  document.getElementById("readTitle").textContent = memory.title;
+  document.getElementById("readContent").textContent = memory.text;
+
+  document.getElementById("readDate").textContent =
+    memory.createdAt
+      ? new Date(memory.createdAt).toLocaleDateString("pt-PT")
+      : "A STAR IN YOUR UNIVERSE";
+
+  editorOverlay.classList.remove("open");
+  readOverlay.classList.add("open");
+}
+
+function closeRead() {
+  readOverlay.classList.remove("open");
+  selectedId = null;
+}
+
+document.getElementById("addButton").addEventListener("click", () => {
+  openEditor();
+});
+
+document.getElementById("cancelEdit").addEventListener("click", closeEditor);
+
+memoryForm.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const title = document.getElementById("memoryTitle").value.trim();
+  const type = document.getElementById("memoryType").value;
+  const text = document.getElementById("memoryText").value.trim();
+
+  if (!title || !text) return;
+
+  if (editingId) {
+    const memory = memories.find(item => item.id === editingId);
+    if (memory) {
+      memory.title = title;
+      memory.type = type;
+      memory.text = text;
+    }
+  } else {
+    // Coloca as novas estrelas em posições distribuídas no céu.
+    const index = memories.length;
+    const angle = index * 2.39996;
+    const radius = 12 + (index % 4) * 8;
+
+    memories.push({
+      id: (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : String(Date.now()) + Math.random().toString(16).slice(2),
+      title,
+      type,
+      text,
+      createdAt: new Date().toISOString(),
+      x: Math.max(9, Math.min(91, 50 + Math.cos(angle) * radius)),
+      y: Math.max(13, Math.min(83, 50 + Math.sin(angle) * radius))
+    });
+  }
+
+  saveMemories();
+  closeEditor();
+  render();
+});
+
+document.getElementById("closeRead").addEventListener("click", closeRead);
+
+document.getElementById("editButton").addEventListener("click", () => {
+  const memory = memories.find(item => item.id === selectedId);
+  if (memory) openEditor(memory);
+});
+
+document.getElementById("deleteButton").addEventListener("click", () => {
+  const memory = memories.find(item => item.id === selectedId);
+  if (!memory) return;
+
+  if (!confirm(`Apagar a estrela "${memory.title}"? Esta ação não pode ser desfeita.`)) {
+    return;
+  }
+
+  memories = memories.filter(item => item.id !== selectedId);
+  saveMemories();
+  closeRead();
+  render();
+});
+
+document.getElementById("connectButton").addEventListener("click", event => {
+  connectStars = !connectStars;
+  event.currentTarget.textContent = connectStars
+    ? "✧ DESLIGAR AS LINHAS"
+    : "✧ LIGAR AS ESTRELAS";
+  render();
+});
+
+editorOverlay.addEventListener("click", event => {
+  if (event.target === editorOverlay) closeEditor();
+});
+
+readOverlay.addEventListener("click", event => {
+  if (event.target === readOverlay) closeRead();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeEditor();
+    closeRead();
+  }
+});
+
+window.addEventListener("resize", render);
+
+// Fundo com pequenas estrelas cintilantes.
+const sky = document.getElementById("sky");
+const ctx = sky.getContext("2d");
+let backgroundStars = [];
+let skyWidth = 0;
+let skyHeight = 0;
+
+function resizeSky() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  skyWidth = window.innerWidth;
+  skyHeight = window.innerHeight;
+  sky.width = skyWidth * dpr;
+  sky.height = skyHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  backgroundStars = Array.from(
+    { length: Math.min(150, Math.floor(skyWidth * skyHeight / 8000)) },
+    () => ({
+      x: Math.random() * skyWidth,
+      y: Math.random() * skyHeight,
+      r: Math.random() * 1.1 + .2,
+      a: Math.random() * .6 + .2,
+      phase: Math.random() * 6.28
+    })
+  );
+}
+
+function animateSky(time) {
+  ctx.clearRect(0, 0, skyWidth, skyHeight);
+
+  backgroundStars.forEach(star => {
+    const pulse = (Math.sin(time * .001 + star.phase) + 1) / 2;
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(240,82,109,${star.a * (.35 + pulse * .65)})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animateSky);
+}
+
+loadMemories();
+resizeSky();
+render();
+requestAnimationFrame(animateSky);
+window.addEventListener("resize", resizeSky);
+</script>
+</body>
+</html>
